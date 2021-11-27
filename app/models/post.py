@@ -2,7 +2,8 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Optional, List
 
-from app.models import Comment, Like
+from app.models.comment import Comment
+from app.models.like import Like
 from app.models.init_db import db
 
 
