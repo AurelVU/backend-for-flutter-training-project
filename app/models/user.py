@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List, Optional
 
 from app.models.init_db import db
@@ -19,16 +19,20 @@ class User:
         db.Column("lastname", db.String(50)),
         db.Column("nickname", db.String(12)),
     )
-    id: int
+    id: int = field(init=False)
     roles: str
     nickname: str
     firstname: str
     lastname: str
-    hashed_password: str
+    hashed_password: str = field(
+        metadata=dict(
+            load_only=True
+        )
+    )
     website: str
     posts: List[Post]
 
-    __mapper_args__ = {  # type: ignore
+    __mapper_args__ = {
         "properties": {
             "posts": db.relationship("Post")
         }
@@ -74,7 +78,7 @@ class User:
         class method that takes a single ``username`` argument and returns a user
         instance if there is one that matches or ``None`` if there is not.
         """
-        return cls.query.filter_by(nickname=nickname).one_or_none()
+        return db.session.query(cls).filter_by(nickname=nickname).one_or_none()
 
     @classmethod
     def identify(cls, user_id):
@@ -84,4 +88,4 @@ class User:
         class method that takes a single ``id`` argument and returns user instance if
         there is one that matches or ``None`` if there is not.
         """
-        return cls.query.get(user_id)
+        return db.session.query(cls).get(user_id)

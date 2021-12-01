@@ -23,9 +23,24 @@ class Post:
     user_id: int = field(init=False)
     title: str
     text: str
-    time_created: datetime
-    comments: List[Comment]
-    likes: List[Like]
+    time_created: datetime = field(
+        init=False,
+        metadata=dict(
+            dump_only=True
+        )
+    )
+    comments: List[Comment] = field(
+        init=False,
+        metadata=dict(
+            load_only=True
+        )
+    )
+    likes: List[Like] = field(
+        init=False,
+        metadata=dict(
+            load_only=True
+        )
+    )
 
     __mapper_args__ = {  # type: ignore
         "properties": {

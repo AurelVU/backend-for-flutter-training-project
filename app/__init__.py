@@ -1,14 +1,14 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_migrate import Migrate
-from flask_praetorian import Praetorian
 from flask_restx import Api
 
 from app.config import BaseConfig
 from app.schema import UserSchema
+from . import resource
 from .models.init_db import db
+from .resource.init_guard import guard
 
-guard = Praetorian()
 cors = CORS()
 migrate = Migrate()
 api = Api(authorizations={
@@ -20,7 +20,6 @@ api = Api(authorizations={
     },
 })
 
-from .resource import *
 from .models import *
 
 
@@ -37,6 +36,9 @@ def create_app(config):
     db.init_app(app)
     migrate.init_app(app, db)
     api.init_app(app)
+    api.add_namespace(resource.user_ns)
+    api.add_namespace(resource.post_ns)
+    api.add_namespace(resource.comment_ns)
 
     cors.init_app(app)
 
