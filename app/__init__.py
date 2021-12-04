@@ -6,6 +6,7 @@ from flask_restx import Api
 from app.config import BaseConfig
 from app.schema import UserSchema
 from . import resource
+from .config.heroku_config import HerokuConfig
 from .models.init_db import db
 from .resource.init_guard import guard
 
@@ -24,7 +25,7 @@ from .models import *
 
 
 def create_app():
-    config = BaseConfig  # Todo: fixme!!!
+    config = HerokuConfig  # Todo: fixme!!!
 
     app = Flask(__name__)
     app.config.from_object(config)
