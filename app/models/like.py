@@ -12,6 +12,6 @@ class Like:
         db.Column("user_id", db.Integer, db.ForeignKey("user.id")),
         db.Column("post_id", db.Integer, db.ForeignKey("post.id")),
     )
-    id: int
     user_id: int
     post_id: int
+    id: int = None

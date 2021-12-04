@@ -8,7 +8,7 @@ from app.models.init_db import db
 
 
 @db.Model.registry.mapped
-@dataclass
+@dataclass(init=False)
 class Post:
     __table__ = db.Table(
         "post",
@@ -19,26 +19,34 @@ class Post:
         db.Column("text", db.String(5000)),
         db.Column('time_created', db.DateTime(timezone=True), server_default=db.func.now()),
     )
-    id: int = field(init=False)
-    user_id: int = field(init=False)
+
+    def __init__(self, **kwargs):
+        self.id = kwargs.get('id', None)
+        self.user_id = kwargs.get('user_id', None)
+        self.title = kwargs.get('title')
+        self.text = kwargs.get('text')
+        self.time_created = kwargs.get('time_created', None)
+        self.comments = kwargs.get('comments', [])
+        self.likes = kwargs.get('likes', [])
+
     title: str
     text: str
-    time_created: datetime = field(
-        init=False,
+    comments: List[Comment] = field(
         metadata=dict(
             dump_only=True
         )
     )
-    comments: List[Comment] = field(
-        init=False,
+    likes: List[Like] = field(
         metadata=dict(
-            load_only=True
+            dump_only=True
         )
     )
-    likes: List[Like] = field(
-        init=False,
+    id: Optional[int] = field(default=0, metadata=dict(dump_only=True, required=False))
+    user_id: Optional[int] = field(default=0, metadata=dict(dump_only=True))
+    time_created: Optional[datetime] = field(
+        default=None,
         metadata=dict(
-            load_only=True
+            dump_only=True
         )
     )
 
