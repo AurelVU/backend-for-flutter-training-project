@@ -23,7 +23,7 @@ api = Api(authorizations={
 from .models import *
 
 
-def create_app(config):
+def create_app():
     config = BaseConfig  # Todo: fixme!!!
 
     app = Flask(__name__)
