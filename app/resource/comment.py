@@ -35,4 +35,4 @@ class PostResource(Resource):
     @comment_ns.doc('Get posts', params={'post_id': 'ID поста', 'comment_id': 'ID комментария'})
     @responds(schema=CommentSchema, api=comment_ns)
     def get(self, post_id, comment_id):
-        return db.session.query(Comment).filter_by(post_id=post_id).filter_by(comment_id=comment_id).first()
+        return db.session.query(Comment).filter_by(post_id=post_id).filter_by(id=comment_id).first()
