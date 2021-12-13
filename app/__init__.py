@@ -27,7 +27,7 @@ from .models import *
 def create_app():
     config = HerokuConfig  # Todo: fixme!!!
 
-    app = Flask(__name__)
+    app = Flask('backend-for-flutter-training-project')
     app.config.from_object(config)
     app.debug = True
     from app.models import User
