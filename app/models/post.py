@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Optional, List
 
+from app.models.url import URL
 from app.models.comment import Comment
 from app.models.like import Like
 from app.models.init_db import db
@@ -28,6 +29,7 @@ class Post:
         self.time_created = kwargs.get('time_created', None)
         self.comments = kwargs.get('comments', [])
         self.likes = kwargs.get('likes', [])
+        self.photos_url = kwargs.get('photos_url', [])
 
     title: str
     text: str
@@ -36,6 +38,7 @@ class Post:
             dump_only=True
         )
     )
+    photos_url: List[URL]
     likes: List[Like] = field(
         metadata=dict(
             dump_only=True
@@ -54,5 +57,6 @@ class Post:
         "properties": {
             "comments": db.relationship("Comment"),
             "likes": db.relationship("Like"),
+            "photos_url": db.relationship("URL"),
         }
     }
