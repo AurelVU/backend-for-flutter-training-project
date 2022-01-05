@@ -15,10 +15,14 @@ post_ns = Namespace('post', description='Операции для взаимод�
 
 @post_ns.route("/")
 class PostsResource(Resource):
-    @post_ns.doc('Get posts')
+    @post_ns.doc('Get posts', params={'page': 'Номер страницы'})
     @responds(schema=PostSchema, many=True, api=post_ns)
     def get(self):
-        return db.session.query(Post).all()
+        query = db.session.query(Post).order_by(Post.time_created.desc())
+        page = request.args.get('page')
+        if page:
+            query = query.limit(7).offset(int(page) * 7)
+        return query.all()
 
     @flask_praetorian.auth_required
     @post_ns.doc('Get posts', security='Bearer')
