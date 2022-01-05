@@ -1,5 +1,9 @@
-import marshmallow_dataclass
-
 from app.models import Like
+from app.schema.init_ma import ma
 
-LikeSchema = marshmallow_dataclass.class_schema(Like)
+
+class LikeSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Like
+        load_instance = True
+        include_fk = True

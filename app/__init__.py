@@ -9,6 +9,7 @@ from . import resource
 from .config.heroku_config import HerokuConfig
 from .models.init_db import db
 from .resource.init_guard import guard
+from .schema.init_ma import ma
 
 cors = CORS()
 migrate = Migrate()
@@ -35,6 +36,7 @@ def create_app():
         guard.init_app(app, User)
 
     db.init_app(app)
+    ma.init_app(app)
     migrate.init_app(app, db)
     api.init_app(app)
     api.add_namespace(resource.user_ns)

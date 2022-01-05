@@ -28,13 +28,12 @@ class UserRegistrationResource(Resource):
     def post(self):
         data = request.parsed_obj
         user = User(
-            roles='user',
+            name='default',
             nickname=data.nickname,
             firstname=data.firstname,
             lastname=data.lastname,
             hashed_password=guard.hash_password(data.password),
-            website=data.website,
-            posts=[]
+            website=data.website
         )
         db.session.add(user)
         db.session.commit()

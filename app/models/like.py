@@ -1,17 +1,7 @@
-from dataclasses import dataclass
 from .init_db import db
 
 
-@db.Model.registry.mapped
-@dataclass
-class Like:
-    __table__ = db.Table(
-        "like",
-        db.Model.metadata,
-        db.Column("id", db.Integer, primary_key=True),
-        db.Column("user_id", db.Integer, db.ForeignKey("user.id")),
-        db.Column("post_id", db.Integer, db.ForeignKey("post.id")),
-    )
-    user_id: int
-    post_id: int
-    id: int = None
+class Like(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    post_id = db.Column(db.Integer, db.ForeignKey("post.id"))

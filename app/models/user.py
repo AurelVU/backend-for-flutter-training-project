@@ -1,42 +1,17 @@
-from dataclasses import dataclass, field
-from typing import List, Optional
-
 from app.models.init_db import db
-from app.models.post import Post
 
 
-@db.Model.registry.mapped
-@dataclass
-class User:
-    __table__ = db.Table(
-        "user",
-        db.Model.metadata,
-        db.Column("id", db.Integer, primary_key=True),
-        db.Column("name", db.String(50)),
-        db.Column("hashed_password", db.String(255)),
-        db.Column("website", db.String(255)),
-        db.Column("firstname", db.String(50)),
-        db.Column("lastname", db.String(50)),
-        db.Column("nickname", db.String(12)),
-    )
-    id: int = field(init=False)
-    roles: str
-    nickname: str
-    firstname: str
-    lastname: str
-    hashed_password: str = field(
-        metadata=dict(
-            load_only=True
-        )
-    )
-    website: str
-    posts: List[Post]
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    hashed_password = db.Column(db.String(255))
+    website = db.Column(db.String(255))
+    firstname = db.Column(db.String(50))
+    lastname = db.Column(db.String(50))
+    nickname = db.Column(db.String(12))
 
-    __mapper_args__ = {
-        "properties": {
-            "posts": db.relationship("Post")
-        }
-    }
+    posts = db.relationship("Post", uselist=True)
+
 
     @property
     def identity(self):
@@ -56,7 +31,7 @@ class User:
         attached to the user instance
         """
         try:
-            return self.roles.split(",")
+            return ['user']
         except Exception:
             return []
 
@@ -78,7 +53,7 @@ class User:
         class method that takes a single ``username`` argument and returns a user
         instance if there is one that matches or ``None`` if there is not.
         """
-        return db.session.query(cls).filter_by(nickname=nickname).one_or_none()
+        return db.session.query(cls).filter_by(nickname=nickname).first()
 
     @classmethod
     def identify(cls, user_id):
