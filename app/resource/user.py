@@ -54,7 +54,7 @@ class UserResource(Resource):
         user = request.parsed_obj
         if user.id is not None:
             user.id = guard.extract_jwt_token(guard.read_token())['id']
-        if user_id.id != guard.extract_jwt_token(guard.read_token())['id']:
+        if user_id != guard.extract_jwt_token(guard.read_token())['id']:
             return {'status': 'error', 'message': 'Permission denied'}, 403
         db.session.add(user)
         db.session.commit()

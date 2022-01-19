@@ -9,6 +9,7 @@ class User(db.Model):
     firstname = db.Column(db.String(50))
     lastname = db.Column(db.String(50))
     nickname = db.Column(db.String(12))
+    avatar_url = db.Column(db.String(1000))
 
     posts = db.relationship("Post", uselist=True)
 
