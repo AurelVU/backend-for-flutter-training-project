@@ -11,7 +11,7 @@ class User(db.Model):
     nickname = db.Column(db.String(12))
     avatar_url = db.Column(db.String(1000))
 
-    posts = db.relationship("Post", uselist=True)
+    posts = db.relationship("Post", uselist=True, order_by="desc(Post.time_created)")
 
 
     @property
