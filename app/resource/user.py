@@ -6,6 +6,7 @@ from app.models import User
 from app.models.init_db import db
 from app.resource.init_guard import guard
 from app.schema import UserSchema, RegistrationDataSchema, LoginDataSchema
+from app.schema.edit_profile_data import EditProfileDataSchema
 
 user_ns = Namespace('user', description='Операции для взаимодействия с пользователями')
 
@@ -48,17 +49,15 @@ class UserResource(Resource):
         return db.session.query(User).get(user_id)
 
     @user_ns.doc('User editing', security='Bearer')
-    @accepts(schema=UserSchema, api=user_ns)
+    @accepts(schema=EditProfileDataSchema, api=user_ns)
     @responds(schema=UserSchema, api=user_ns, status_code=200)
     def put(self, user_id):
         user = request.parsed_obj
-        if user.id is not None:
-            user.id = guard.extract_jwt_token(guard.read_token())['id']
         if user_id != guard.extract_jwt_token(guard.read_token())['id']:
             return {'status': 'error', 'message': 'Permission denied'}, 403
         cuser = User.query.get(user_id)
-        cuser.name = user.name
-        cuser.avatar_url = user.avatar_url
+        if user.avatarUrl:
+            cuser.avatar_url = user.avatarUrl
         cuser.firstname = user.firstname
         cuser.lastname = user.lastname
         cuser.website = user.website
